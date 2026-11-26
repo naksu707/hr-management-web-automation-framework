@@ -7,7 +7,7 @@
 ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=flat-square&logo=cypress&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?style=flat-square&logo=nodedotjs&logoColor=white)
-![Mochawesome](https://img.shields.io/static/v1?label=&message=Mochawesome&color=8D6748&style=flat-square&logo=mocha&logoColor=white)
+![Mochawesome](docs/images/badge-mochawesome.svg)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
 
 </div>
