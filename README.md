@@ -13,7 +13,7 @@
 </div>
 
 > [!NOTE]
-> **Status: in progress 🚧** · The scope and architecture are defined. Implementation starts with the framework core, authentication and employee management (PIM).
+> **Status: in progress 🚧** · Phase 1 is done: the framework core, authentication tests and employee management (PIM). System users, leave and network tests come next.
 
 ---
 
@@ -23,13 +23,13 @@ A test automation framework for **[OrangeHRM](https://opensource-demo.orangehrml
 
 The project uses Cypress the way it works best:
 
-| Technique | What it is used for |
-|---|---|
-| **Page Objects + custom commands** | Readable tests that describe what the user does, not how the page is built |
-| **`cy.session`** | Log in once per role and reuse the session, so tests stay fast |
-| **`cy.request`** | Create and delete test data through the REST API, instead of clicking through forms that are not under test |
-| **`cy.intercept`** | Wait for the real API calls instead of fixed waits, and simulate empty lists and server errors to test how the UI reacts |
-| **Fixtures** | Data-driven tests with JSON test data |
+| Technique                          | What it is used for                                                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Page Objects + custom commands** | Readable tests that describe what the user does, not how the page is built                                               |
+| **`cy.session`**                   | Log in once per role and reuse the session, so tests stay fast                                                           |
+| **`cy.request`**                   | Create and delete test data through the REST API, instead of clicking through forms that are not under test              |
+| **`cy.intercept`**                 | Wait for the real API calls instead of fixed waits, and simulate empty lists and server errors to test how the UI reacts |
+| **Fixtures**                       | Data-driven tests with JSON test data                                                                                    |
 
 **Design goals**
 
@@ -42,39 +42,39 @@ The project uses Cypress the way it works best:
 
 ## 🧪 Test scope
 
-| Area | What is tested | Status |
-|---|---|---|
-| Authentication | Login, invalid credentials, required fields, logout, protected pages, forgot password | Planned |
-| PIM · Employees | Add an employee, required fields, search by name and ID, edit personal details, delete | Planned |
-| Admin · User management | Create a system user for an employee, roles (Admin / ESS), status, duplicate username, password rules, search, delete | Planned |
-| Leave | An employee applies for leave, the admin approves or rejects it, leave list filters | Planned |
-| Network behavior | Empty results and server errors simulated with `cy.intercept`, and what the UI shows | Planned |
-| UI vs. API consistency | An employee added in the UI exists in the API; data created through the API appears in the UI | Planned |
+| Area                    | What is tested                                                                                                        | Status                                        |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Authentication          | Login, invalid credentials, required fields, logout, protected pages, forgot password                                 | ✅ Done                                       |
+| PIM · Employees         | Add an employee, required fields, duplicate ID, search by name and ID, delete                                         | ✅ Done · editing personal details is planned |
+| Admin · User management | Create a system user for an employee, roles (Admin / ESS), status, duplicate username, password rules, search, delete | Planned                                       |
+| Leave                   | An employee applies for leave, the admin approves or rejects it, leave list filters                                   | Planned                                       |
+| Network behavior        | Empty results and server errors simulated with `cy.intercept`, and what the UI shows                                  | Planned                                       |
+| UI vs. API consistency  | An employee added in the UI exists in the API; data created through the API appears in the UI                         | Planned                                       |
 
 ### Risk-based priorities
 
-| Priority | Features |
-|---|---|
-| **Critical** | Authentication, access by role, employee records |
-| **High** | System users and roles, leave requests and approvals |
-| **Medium** | Search and filters, validation messages, error handling in the UI |
+| Priority     | Features                                                          |
+| ------------ | ----------------------------------------------------------------- |
+| **Critical** | Authentication, access by role, employee records                  |
+| **High**     | System users and roles, leave requests and approvals              |
+| **Medium**   | Search and filters, validation messages, error handling in the UI |
 
-Detailed test cases will be documented in `docs/test-cases.md`, and defects found in `docs/defects.md`.
+Detailed test cases are in [`docs/test-cases.md`](docs/test-cases.md), and defects found are in [`docs/defects.md`](docs/defects.md).
 
 ---
 
 ## 🛠️ Tech stack
 
-| Purpose | Tool |
-|---|---|
-| Language | TypeScript |
-| E2E framework | Cypress |
-| Runtime | Node.js 20 |
-| Test data | Fixtures (JSON) and API setup with `cy.request` |
-| Reporting | Mochawesome (HTML), screenshots and videos of failed tests |
-| Code quality | ESLint and Prettier |
-| CI/CD | GitHub Actions, with a cross-browser matrix (Chrome, Firefox, Edge) |
-| IDE | Visual Studio Code / WebStorm |
+| Purpose       | Tool                                                                |
+| ------------- | ------------------------------------------------------------------- |
+| Language      | TypeScript                                                          |
+| E2E framework | Cypress                                                             |
+| Runtime       | Node.js 20                                                          |
+| Test data     | Fixtures (JSON) and API setup with `cy.request`                     |
+| Reporting     | Mochawesome (HTML), screenshots and videos of failed tests          |
+| Code quality  | ESLint, Prettier and the TypeScript compiler (`tsc --noEmit`)       |
+| CI/CD         | GitHub Actions, with a cross-browser matrix (Chrome, Firefox, Edge) |
+| IDE           | Visual Studio Code / WebStorm                                       |
 
 ---
 
@@ -89,13 +89,16 @@ hr-management-web-automation-framework
 │   │   ├── admin/           System users and roles
 │   │   ├── leave/           Leave requests and approvals across two roles
 │   │   └── network/         UI behavior with stubbed API responses
-│   ├── pages/               Page Objects: LoginPage, EmployeeListPage, AddEmployeePage,
-│   │                        UserManagementPage, LeaveListPage, ApplyLeavePage
+│   ├── pages/               Page Objects: LoginPage, DashboardPage, AddEmployeePage,
+│   │                        PersonalDetailsPage, EmployeeListPage
 │   ├── support/
 │   │   ├── commands.ts      cy.loginAs(role), cy.createEmployee(), cy.deleteEmployee()
+│   │   ├── index.d.ts       Types of the custom commands
 │   │   ├── api/             Typed helpers for the OrangeHRM REST API
-│   │   └── e2e.ts           Global hooks and reporter setup
-│   └── fixtures/            Users, employees and leave test data
+│   │   ├── data/            Test data builders with unique names and IDs
+│   │   └── e2e.ts           Global hooks: reporter and clean-up after each test
+│   └── fixtures/            JSON test data (invalid logins)
+├── .github/workflows/       CI: lint, type check and the cross-browser matrix
 ├── docs/                    Test strategy, test plan, test cases and defects
 ├── cypress.config.ts        Base URL, retries, reporter, environments
 ├── tsconfig.json
@@ -174,32 +177,45 @@ npx cypress run
 npx cypress run --browser chrome
 
 # Run one area
-npx cypress run --spec "cypress/e2e/pim/**"
+npm run test:auth
+npm run test:pim
+
+# Code quality
+npm run lint
+npm run typecheck
 ```
+
+The HTML report is saved in `cypress/reports/index.html`.
 
 ---
 
 ## ⚙️ CI/CD
 
-GitHub Actions will run the suite on every push to `main` and on every pull request:
+GitHub Actions runs on every push to `main`, on every pull request, and on demand:
 
-- **Cross-browser matrix:** Chrome, Firefox and Edge.
-- **Artifacts:** the Mochawesome report, plus screenshots and videos of failed tests.
-- **Published report:** the HTML report on GitHub Pages, so the latest results can be seen without downloading anything.
+1. **Quality:** ESLint and the TypeScript type check. The tests only run if this passes.
+2. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, in parallel.
+3. **Artifacts:** the Mochawesome report for each browser, plus screenshots of failed tests.
+
+Planned: the HTML report published on GitHub Pages, so the latest results can be seen without downloading anything.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] Framework core: Cypress with TypeScript, Page Objects, custom commands, `cy.session` login, API helpers
-- [ ] Authentication tests
-- [ ] PIM: employee management
+- [x] Framework core: Cypress with TypeScript, Page Objects, custom commands, `cy.session` login, API helpers
+- [x] Authentication tests
+- [x] PIM: add, search and delete employees
+- [ ] PIM: edit personal details
 - [ ] Admin: system users and roles
 - [ ] Leave: request and approval across two roles
 - [ ] Network behavior with `cy.intercept`
 - [ ] UI vs. API consistency tests
-- [ ] CI with GitHub Actions: cross-browser matrix and published report
-- [ ] Test strategy, test plan, test cases and defect reports
+- [x] CI with GitHub Actions: lint, type check and cross-browser matrix
+- [ ] Report published on GitHub Pages
+- [x] Test cases
+- [x] Defect reports
+- [ ] Test strategy and test plan
 
 ---
 

@@ -1,0 +1,9 @@
+[
+  { "case": "a wrong password", "username": "Admin", "password": "wrong-password-123" },
+  { "case": "an unknown username", "username": "no.such.user", "password": "admin123" },
+  {
+    "case": "a username with the wrong case and a wrong password",
+    "username": "ADMIN",
+    "password": "Admin123"
+  }
+]
