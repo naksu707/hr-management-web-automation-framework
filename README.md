@@ -257,7 +257,7 @@ GitHub Actions runs on every push to `main`, on every pull request, and on deman
 
 > [!NOTE]
 > **Project status: Completed ✅**
-> This repository is finished and is no longer being updated. All projects were last verified to work correctly as of **November 24, 2026**. Later changes to browsers, libraries or dependencies may affect how some projects run.
+> This repository is finished and is no longer being updated. All projects were last verified to work correctly as of **November 26, 2026**. Later changes to browsers, libraries or dependencies may affect how some projects run.
 
 ---
 
