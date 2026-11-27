@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -41,7 +41,22 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+
+      # The public demo is shared and sometimes slow to answer: wait up to 3 minutes
+      - name: Wait for the OrangeHRM demo
+        run: |
+          for attempt in $(seq 1 18); do
+            if curl --silent --fail --max-time 20 --output /dev/null \
+              https://opensource-demo.orangehrmlive.com/web/index.php/auth/login; then
+              echo "The demo is up (attempt $attempt)"
+              exit 0
+            fi
+            echo "The demo is not answering yet (attempt $attempt of 18), waiting 10 seconds"
+            sleep 10
+          done
+          echo "::error::The OrangeHRM demo did not answer for 3 minutes"
+          exit 1
 
       - name: Run the tests
         uses: cypress-io/github-action@v6

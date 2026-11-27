@@ -6,7 +6,7 @@
 
 ![Cypress](https://img.shields.io/badge/Cypress-17202C?style=flat-square&logo=cypress&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-20-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?style=flat-square&logo=nodedotjs&logoColor=white)
 ![Mochawesome](docs/images/badge-mochawesome.svg)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
 
@@ -69,7 +69,7 @@ Detailed test cases are in [`docs/test-cases.md`](docs/test-cases.md), and defec
 | ------------- | ------------------------------------------------------------------- |
 | Language      | TypeScript                                                          |
 | E2E framework | Cypress                                                             |
-| Runtime       | Node.js 20                                                          |
+| Runtime       | Node.js 22                                                          |
 | Test data     | Fixtures (JSON) and API setup with `cy.request`                     |
 | Reporting     | Mochawesome (HTML), screenshots and videos of failed tests          |
 | Code quality  | ESLint, Prettier and the TypeScript compiler (`tsc --noEmit`)       |
@@ -164,7 +164,7 @@ it("shows an error message when the employee list cannot be loaded", () => {
 
 ## ▶️ Run the tests
 
-**Requirements:** Node.js 20+ and Git.
+**Requirements:** Node.js 20+ (22 in CI) and Git.
 
 ```bash
 # Install the dependencies
@@ -198,8 +198,9 @@ The HTML report is saved in `cypress/reports/index.html`.
 GitHub Actions runs on every push to `main`, on every pull request, and on demand:
 
 1. **Quality:** ESLint and the TypeScript type check. The tests only run if this passes.
-2. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, in parallel.
-3. **Artifacts:** the Mochawesome report for each browser, plus screenshots of failed tests.
+2. **Demo check:** each job waits up to 3 minutes for the public demo to answer before running the tests.
+3. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, in parallel.
+4. **Artifacts:** the Mochawesome report for each browser, plus screenshots of failed tests.
 
 Planned: the HTML report published on GitHub Pages, so the latest results can be seen without downloading anything.
 
