@@ -44,6 +44,7 @@ describe("PIM · Add employee", () => {
       trackEmployee(response?.body.data.empNumber);
     });
     cy.location("pathname").should("match", PersonalDetailsPage.pathPattern);
+    PersonalDetailsPage.waitUntilLoaded(employee.firstName);
 
     EmployeeListPage.open().searchById(employee.employeeId);
     EmployeeListPage.rows()

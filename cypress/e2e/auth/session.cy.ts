@@ -11,19 +11,15 @@ describe("Authentication · Session and protected pages", () => {
   });
 
   it("TC-AUTH-07 logs out and closes access to protected pages", () => {
-    // BUG-001: after logout the app throws an unhandled promise rejection.
-    // Only that known error is ignored; any other error still fails the test.
-    cy.on("uncaught:exception", (error) => {
-      if (error.message.includes("Cannot read properties of undefined (reading 'response')")) {
-        return false;
-      }
-      return true;
-    });
-
     // A fresh login, so the cached cy.session of other tests stays valid
     const { username, password } = USERS.admin;
     LoginPage.open().loginWith(username, password);
     DashboardPage.header().should("contain", "Dashboard");
+
+    // BUG-001: after logout, the requests that run without a session fail and the app
+    // does not handle them. The message changes by browser and page, so from here on only
+    // unhandled promise rejections are ignored. Any other error still fails the test.
+    cy.on("uncaught:exception", (_error, _runnable, promise) => !promise);
 
     DashboardPage.logout();
 
