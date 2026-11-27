@@ -1,4 +1,5 @@
 import type { Employee } from "../support/data/employees";
+import { field, fieldError } from "./components";
 
 export const AddEmployeePage = {
   path: "/web/index.php/pim/addEmployee",
@@ -12,9 +13,8 @@ export const AddEmployeePage = {
   firstName: () => cy.get('input[name="firstName"]'),
   middleName: () => cy.get('input[name="middleName"]'),
   lastName: () => cy.get('input[name="lastName"]'),
-  employeeId: () => cy.contains(".oxd-input-group", "Employee Id").find("input"),
-  employeeIdError: () =>
-    cy.contains(".oxd-input-group", "Employee Id").find(".oxd-input-field-error-message"),
+  employeeId: () => field("Employee Id").find("input"),
+  employeeIdError: () => fieldError("Employee Id"),
   fieldErrors: () => cy.get(".oxd-input-field-error-message"),
   saveButton: () => cy.get('button[type="submit"]'),
 

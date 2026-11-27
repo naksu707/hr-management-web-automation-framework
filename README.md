@@ -13,7 +13,7 @@
 </div>
 
 > [!NOTE]
-> **Status: in progress 🚧** · Phase 1 is done: the framework core, authentication tests and employee management (PIM). System users, leave and network tests come next.
+> **Status: in progress 🚧** · Phases 1 and 2 are done: the framework core, authentication, employee management (PIM), and system users with access by role. Leave requests and network tests come next.
 
 ---
 
@@ -42,14 +42,14 @@ The project uses Cypress the way it works best:
 
 ## 🧪 Test scope
 
-| Area                    | What is tested                                                                                                        | Status                                        |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Authentication          | Login, invalid credentials, required fields, logout, protected pages, forgot password                                 | ✅ Done                                       |
-| PIM · Employees         | Add an employee, required fields, duplicate ID, search by name and ID, delete                                         | ✅ Done · editing personal details is planned |
-| Admin · User management | Create a system user for an employee, roles (Admin / ESS), status, duplicate username, password rules, search, delete | Planned                                       |
-| Leave                   | An employee applies for leave, the admin approves or rejects it, leave list filters                                   | Planned                                       |
-| Network behavior        | Empty results and server errors simulated with `cy.intercept`, and what the UI shows                                  | Planned                                       |
-| UI vs. API consistency  | An employee added in the UI exists in the API; data created through the API appears in the UI                         | Planned                                       |
+| Area                    | What is tested                                                                                                               | Status  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Authentication          | Login, invalid credentials, required fields, logout, protected pages, forgot password                                        | ✅ Done |
+| PIM · Employees         | Add an employee, required fields, duplicate ID, search by name and ID, edit personal details, delete                         | ✅ Done |
+| Admin · User management | Create a system user for an employee, roles (Admin / ESS), disabled accounts, duplicate username, validation, search, delete | ✅ Done |
+| Leave                   | An employee applies for leave, the admin approves or rejects it, leave list filters                                          | Planned |
+| Network behavior        | Empty results and server errors simulated with `cy.intercept`, and what the UI shows                                         | Planned |
+| UI vs. API consistency  | An employee added in the UI exists in the API; data created through the API appears in the UI                                | Planned |
 
 ### Risk-based priorities
 
@@ -90,12 +90,15 @@ hr-management-web-automation-framework
 │   │   ├── leave/           Leave requests and approvals across two roles
 │   │   └── network/         UI behavior with stubbed API responses
 │   ├── pages/               Page Objects: LoginPage, DashboardPage, AddEmployeePage,
-│   │                        PersonalDetailsPage, EmployeeListPage
+│   │                        PersonalDetailsPage, EmployeeListPage, AddSystemUserPage,
+│   │                        SystemUsersPage, and shared components (fields, dropdowns,
+│   │                        autocomplete, tables, toasts, side menu)
 │   ├── support/
-│   │   ├── commands.ts      cy.loginAs(role), cy.createEmployee(), cy.deleteEmployee()
+│   │   ├── commands.ts      cy.loginAs(role), cy.loginWith(), cy.createEmployee(), cy.createUser()
 │   │   ├── index.d.ts       Types of the custom commands
 │   │   ├── api/             Typed helpers for the OrangeHRM REST API
 │   │   ├── data/            Test data builders with unique names and IDs
+│   │   ├── known-defects.ts Handling of known app defects (BUG-001)
 │   │   └── e2e.ts           Global hooks: reporter and clean-up after each test
 │   └── fixtures/            JSON test data (invalid logins)
 ├── .github/workflows/       CI: lint, type check and the cross-browser matrix
@@ -179,6 +182,7 @@ npx cypress run --browser chrome
 # Run one area
 npm run test:auth
 npm run test:pim
+npm run test:admin
 
 # Code quality
 npm run lint
@@ -205,9 +209,8 @@ Planned: the HTML report published on GitHub Pages, so the latest results can be
 
 - [x] Framework core: Cypress with TypeScript, Page Objects, custom commands, `cy.session` login, API helpers
 - [x] Authentication tests
-- [x] PIM: add, search and delete employees
-- [ ] PIM: edit personal details
-- [ ] Admin: system users and roles
+- [x] PIM: add, search, edit and delete employees
+- [x] Admin: system users and access by role
 - [ ] Leave: request and approval across two roles
 - [ ] Network behavior with `cy.intercept`
 - [ ] UI vs. API consistency tests

@@ -56,6 +56,10 @@ export function findEmployees(nameOrId: string): Cypress.Chainable<CreatedEmploy
     });
 }
 
+export function hasEmployeesToCleanUp(): boolean {
+  return createdEmployees.length > 0;
+}
+
 export function cleanUpEmployees(): void {
   if (createdEmployees.length === 0) {
     return;

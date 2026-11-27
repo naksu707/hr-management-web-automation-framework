@@ -1,4 +1,5 @@
 import { EMPLOYEES_API } from "../support/api/employees";
+import { field, pickFromAutocomplete, Table } from "./components";
 
 export const EmployeeListPage = {
   path: "/web/index.php/pim/viewEmployeeList",
@@ -11,11 +12,10 @@ export const EmployeeListPage = {
     return this;
   },
 
-  employeeNameInput: () => cy.contains(".oxd-input-group", "Employee Name").find("input"),
-  employeeIdInput: () => cy.contains(".oxd-input-group", "Employee Id").find("input"),
+  employeeIdInput: () => field("Employee Id").find("input"),
   searchButton: () => cy.get('button[type="submit"]'),
-  rows: () => cy.get(".oxd-table-body .oxd-table-card"),
-  recordsFound: () => cy.contains("span.oxd-text", /Record(s)? Found/),
+  rows: () => Table.rows(),
+  recordsFound: () => Table.recordsFound(),
 
   search() {
     cy.intercept({ method: "GET", pathname: EMPLOYEES_API }).as("employeeSearch");
@@ -31,15 +31,13 @@ export const EmployeeListPage = {
 
   /** Types the name and picks the matching suggestion of the autocomplete. */
   searchByName(name: string) {
-    this.employeeNameInput().clear().type(name);
-    cy.contains(".oxd-autocomplete-option", name).click();
+    pickFromAutocomplete("Employee Name", name);
     return this.search();
   },
 
   deleteFirstRow() {
     cy.intercept({ method: "DELETE", pathname: EMPLOYEES_API }).as("deleteEmployee");
-    this.rows().first().find(".bi-trash").closest("button").click();
-    cy.contains(".oxd-dialog-sheet button", "Yes, Delete").click();
+    Table.deleteFirstRow();
     cy.wait("@deleteEmployee");
     return this;
   },

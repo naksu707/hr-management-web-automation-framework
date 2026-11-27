@@ -16,11 +16,6 @@ describe("Authentication · Session and protected pages", () => {
     LoginPage.open().loginWith(username, password);
     DashboardPage.header().should("contain", "Dashboard");
 
-    // BUG-001: after logout, the requests that run without a session fail and the app
-    // does not handle them. The message changes by browser and page, so from here on only
-    // unhandled promise rejections are ignored. Any other error still fails the test.
-    cy.on("uncaught:exception", (_error, _runnable, promise) => !promise);
-
     DashboardPage.logout();
 
     cy.location("pathname").should("eq", LoginPage.path);
