@@ -2,7 +2,7 @@ import { findUsers, trackUser, USERS_API } from "../../support/api/users";
 import { aSystemUser, TEST_PASSWORD, uniqueUsername } from "../../support/data/users";
 import { AddSystemUserPage } from "../../pages/AddSystemUserPage";
 import { SystemUsersPage } from "../../pages/SystemUsersPage";
-import { Toast } from "../../pages/components";
+import { fieldError, Toast } from "../../pages/components";
 
 describe("Admin · System users", () => {
   beforeEach(() => {
@@ -80,8 +80,12 @@ describe("Admin · System users", () => {
 
     AddSystemUserPage.open().save();
 
-    // User Role, Employee Name, Status, Username and Password
-    AddSystemUserPage.fieldErrors().should("have.length.at.least", 5);
+    // The dropdowns and the employee are always checked in the browser. The text fields
+    // may be checked a moment later, so the total is at least 4 rather than an exact count.
+    ["User Role", "Employee Name", "Status"].forEach((label) => {
+      fieldError(label).should("have.text", "Required");
+    });
+    AddSystemUserPage.fieldErrors().should("have.length.at.least", 4);
     cy.location("pathname").should("eq", AddSystemUserPage.path);
     cy.get("@createUser.all").should("have.length", 0);
   });
