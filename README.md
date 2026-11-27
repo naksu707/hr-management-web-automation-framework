@@ -1,6 +1,6 @@
 <div align="center">
 
-# 👥 HR Management Web Automation Framework
+# HR Management Web Automation Framework
 
 **End-to-end test automation for an HR management system, with Cypress and TypeScript**
 
