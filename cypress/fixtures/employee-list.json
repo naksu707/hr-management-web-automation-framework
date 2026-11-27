@@ -1,0 +1,18 @@
+{
+  "data": [
+    {
+      "empNumber": 999001,
+      "employeeId": "STUB-001",
+      "firstName": "Stubbed",
+      "middleName": "",
+      "lastName": "Employee",
+      "terminationId": null,
+      "jobTitle": { "id": 1, "title": "QA Engineer", "isDeleted": false },
+      "subunit": { "id": 1, "name": "Quality Assurance" },
+      "empStatus": { "id": 1, "name": "Full-Time Permanent" },
+      "supervisors": []
+    }
+  ],
+  "meta": { "total": 1 },
+  "rels": []
+}

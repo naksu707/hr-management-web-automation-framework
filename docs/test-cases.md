@@ -75,9 +75,42 @@ Test cases automated against the public [OrangeHRM demo](https://opensource-demo
 | 2    | Log in with the new user                                                      | The dashboard opens                                 |
 | 3    | Look at the main menu                                                         | **My Info** is shown; **Admin** and **PIM** are not |
 
+## Leave · Requests across two roles
+
+Each test creates its own employee, ESS user and leave type, and grants 10 days for the current leave period, so it never depends on the demo's data.
+
+| ID       | Title                                                                                                 | Priority | Type     | Spec                         |
+| -------- | ----------------------------------------------------------------------------------------------------- | -------- | -------- | ---------------------------- |
+| TC-LV-01 | An ESS user applies for one day of leave; it shows in their list and in the API as "Pending Approval" | Critical | UI + API | `leave/leave-requests.cy.ts` |
+| TC-LV-02 | The admin approves the request; the employee sees it as "Scheduled", and the API agrees               | Critical | UI + API | `leave/leave-requests.cy.ts` |
+| TC-LV-03 | The admin rejects the request, and the API shows it as "Rejected"                                     | High     | UI + API | `leave/leave-requests.cy.ts` |
+| TC-LV-04 | Leave type, From Date and To Date are required, and nothing is sent to the API                        | Medium   | UI + API | `leave/leave-requests.cy.ts` |
+
+### Example: TC-LV-02
+
+| Step | Action                                                                                       | Expected result                            |
+| ---- | -------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| 1    | As admin, create an employee, an ESS user, a leave type and 10 days of leave through the API | The API answers 200 for each one           |
+| 2    | Log in as the ESS user and apply for one working day through the API                         | The request is saved as "Pending Approval" |
+| 3    | Log in as admin, open **Leave List** and search for the employee                             | One request is shown                       |
+| 4    | Click **Approve**                                                                            | "Successfully Updated" is shown            |
+| 5    | Log in as the ESS user and open **My Leave**                                                 | The request shows as "Scheduled"           |
+
+## Network · Simulated API responses
+
+These tests use `cy.intercept` to replace the API's answer, to check how the UI reacts to cases that are hard to create on a shared demo.
+
+| ID        | Title                                                                | Priority | Type            | Spec                                  |
+| --------- | -------------------------------------------------------------------- | -------- | --------------- | ------------------------------------- |
+| TC-NET-01 | The list shows the employee returned by a stubbed response (fixture) | Medium   | UI, stubbed API | `network/employee-list-network.cy.ts` |
+| TC-NET-02 | An empty response shows "No Records Found"                           | Medium   | UI, stubbed API | `network/employee-list-network.cy.ts` |
+| TC-NET-03 | A slow response (3 s) shows a loader, then the results               | Medium   | UI, delayed API | `network/employee-list-network.cy.ts` |
+| TC-NET-04 | A server error (500) shows an error message to the user              | High     | UI, stubbed API | `network/employee-list-network.cy.ts` |
+
 ## Test data
 
 - Every employee gets unique names and a unique 9-digit ID, built in `cypress/support/data/employees.ts`.
 - Employees and system users created by a test are deleted through the API after the test, even when it fails. The clean-up runs as admin, because a test may end logged in as an ESS user.
 - System users get a unique username and a password that meets the demo's rules (`cypress/support/data/users.ts`).
-- Invalid login data lives in `cypress/fixtures/invalid-logins.json`.
+- Invalid login data lives in `cypress/fixtures/invalid-logins.json`, and the stubbed employee list in `cypress/fixtures/employee-list.json`.
+- Leave tests use a working day at least a week ahead, inside the current leave period, and skip late December and New Year's Day.

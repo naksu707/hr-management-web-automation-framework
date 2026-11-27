@@ -1,7 +1,9 @@
 import { createEmployee, deleteEmployees, EMPLOYEES_API } from "./api/employees";
+import { addEntitlement, createLeaveType, getCurrentLeavePeriod } from "./api/leave";
 import { createUser } from "./api/users";
 import { anEmployee } from "./data/employees";
-import { USERS, type Role } from "./data/users";
+import { aLeaveTypeName } from "./data/leave";
+import { aSystemUser, USERS, type Role } from "./data/users";
 import { DashboardPage } from "../pages/DashboardPage";
 import { LoginPage } from "../pages/LoginPage";
 
@@ -39,4 +41,27 @@ Cypress.Commands.add("deleteEmployee", (empNumber: number) => {
 
 Cypress.Commands.add("createUser", (user) => {
   return createUser(user);
+});
+
+Cypress.Commands.add("createEssWithLeave", (days = 10) => {
+  cy.loginAs("admin");
+  return cy.createEmployee().then((employee) =>
+    cy.createUser(aSystemUser(employee.empNumber, { role: "ESS" })).then((user) =>
+      getCurrentLeavePeriod().then((period) => {
+        const leaveTypeName = aLeaveTypeName();
+        return createLeaveType(leaveTypeName).then((leaveTypeId) =>
+          addEntitlement(employee.empNumber, leaveTypeId, period, days).then(() => ({
+            empNumber: employee.empNumber,
+            employeeName: `${employee.firstName} ${employee.lastName}`,
+            firstName: employee.firstName,
+            username: user.username,
+            password: user.password,
+            leaveTypeId,
+            leaveTypeName,
+            period,
+          })),
+        );
+      }),
+    ),
+  );
 });

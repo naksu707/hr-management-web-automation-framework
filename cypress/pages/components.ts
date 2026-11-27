@@ -28,6 +28,22 @@ export function pickFromAutocomplete(label: string, text: string): void {
   cy.contains(".oxd-autocomplete-option", text).click();
 }
 
+/**
+ * Types an ISO date (yyyy-mm-dd) in a date field, in the format the field asks for.
+ * The demo's format comes from its settings (for example yyyy-dd-mm), so it is read
+ * from the field's placeholder instead of being hard-coded.
+ */
+export function typeDate(label: string, isoDate: string): void {
+  field(label)
+    .find("input")
+    .then(($input) => {
+      const format = ($input.attr("placeholder") ?? "yyyy-mm-dd").toLowerCase();
+      const [year, month, day] = isoDate.split("-");
+      const value = format.replace("yyyy", year).replace("mm", month).replace("dd", day);
+      cy.wrap($input).clear().type(value).blur();
+    });
+}
+
 /** The rows of the results table. */
 export const Table = {
   rows: () => cy.get(".oxd-table-body .oxd-table-card"),

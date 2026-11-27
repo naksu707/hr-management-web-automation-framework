@@ -17,6 +17,8 @@
     "test:auth": "cypress run --spec \"cypress/e2e/auth/**\"",
     "test:pim": "cypress run --spec \"cypress/e2e/pim/**\"",
     "test:admin": "cypress run --spec \"cypress/e2e/admin/**\"",
+    "test:leave": "cypress run --spec \"cypress/e2e/leave/**\"",
+    "test:network": "cypress run --spec \"cypress/e2e/network/**\"",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",

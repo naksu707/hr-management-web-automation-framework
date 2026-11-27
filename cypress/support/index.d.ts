@@ -20,5 +20,11 @@ declare namespace Cypress {
     createUser(
       user: import("./data/users").SystemUser,
     ): Chainable<import("./data/users").CreatedSystemUser>;
+
+    /**
+     * As admin: creates an employee with an ESS user, a leave type of their own,
+     * and the leave days for the current leave period. All of it is deleted after the test.
+     */
+    createEssWithLeave(days?: number): Chainable<import("./data/leave").LeaveSetup>;
   }
 }
