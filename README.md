@@ -224,7 +224,7 @@ The HTML report is saved in `cypress/reports/index.html`.
 GitHub Actions runs on every push to `main`, on every pull request, and on demand:
 
 1. **Quality:** ESLint and the TypeScript type check. The tests only run if this passes.
-2. **Demo check:** each job waits up to 3 minutes for the public demo to answer before running the tests.
+2. **Demo check:** each job waits up to 5 minutes for the public demo to answer before running the tests.
 3. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, in parallel.
 4. **Artifacts:** the Mochawesome report for each browser, plus screenshots of failed tests.
 5. **Published reports:** on `main`, the three reports are published on **[GitHub Pages](https://naksu707.github.io/hr-management-web-automation-framework/)**, with a landing page that shows the results of each browser.

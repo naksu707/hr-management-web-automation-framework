@@ -45,7 +45,7 @@ The approach used to test [OrangeHRM](https://opensource-demo.orangehrmlive.com/
 | --------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | Other people change or delete data at the same time | Each test uses its own unique data                                                      |
 | The demo resets and cached sessions stop working    | `cy.session` validates the session through the API and logs in again if needed          |
-| The demo is slow or does not answer                 | Longer timeouts, 2 retries in CI, and a CI step that waits up to 3 minutes for the demo |
+| The demo is slow or does not answer                 | Longer timeouts, 2 retries in CI, and a CI step that waits up to 5 minutes for the demo |
 | The app throws errors it does not handle (BUG-001)  | Only that exact pattern is ignored, and it is logged; any other error fails the test    |
 
 ## 7. Defect management

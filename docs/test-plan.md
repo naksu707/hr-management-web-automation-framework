@@ -59,6 +59,6 @@ In CI the suite runs on every push to `main`, on pull requests, and on demand wi
 
 | Risk                                                            | Impact                          | Mitigation                                                                            |
 | --------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------- |
-| The shared demo is down or slow                                 | Runs fail without a real defect | CI waits up to 3 minutes for the demo; retries; tests can be re-run                   |
+| The shared demo is down or slow                                 | Runs fail without a real defect | CI waits up to 5 minutes for the demo; retries; tests can be re-run                   |
 | The demo's data or settings change (leave periods, date format) | Leave tests could fail          | Leave periods are read from the API, and the date format from the field's placeholder |
 | The demo is upgraded and selectors change                       | UI tests fail                   | Selectors live in Page Objects and shared components, so they change in one place     |
