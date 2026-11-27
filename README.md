@@ -225,7 +225,7 @@ GitHub Actions runs on every push to `main`, on every pull request, and on deman
 
 1. **Quality:** ESLint and the TypeScript type check. The tests only run if this passes.
 2. **Demo check:** each job waits up to 5 minutes for the public demo to answer. If it does not, the job leaves a warning and runs the tests anyway.
-3. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, in parallel.
+3. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, one browser at a time, so the shared demo is not overloaded.
 4. **Artifacts:** the Mochawesome report for each browser, plus screenshots of failed tests.
 5. **Published reports:** on `main`, the three reports are published on **[GitHub Pages](https://naksu707.github.io/hr-management-web-automation-framework/)**, with a landing page that shows the results of each browser.
 
