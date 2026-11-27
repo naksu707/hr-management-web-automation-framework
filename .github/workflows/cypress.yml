@@ -46,13 +46,16 @@ jobs:
         with:
           node-version: 22
 
-      # The public demo is shared and sometimes slow to answer: wait up to 5 minutes
+      # The public demo is shared and sometimes slow to answer. This step waits up to
+      # 5 minutes, but it never stops the job: if the demo does not answer the quick check,
+      # Cypress still tries (a browser often gets through when a plain request does not).
       - name: Wait for the OrangeHRM demo
         run: |
           deadline=$((SECONDS + 300))
           attempt=1
           while (( SECONDS < deadline )); do
-            if curl --silent --fail --location --max-time 20 --output /dev/null \
+            if curl --silent --fail --location --max-time 30 --output /dev/null \
+              --user-agent "Mozilla/5.0 (X11; Linux x86_64) Cypress CI check" \
               https://opensource-demo.orangehrmlive.com/web/index.php/auth/login; then
               echo "The demo is up (attempt $attempt, after $SECONDS seconds)"
               exit 0
@@ -61,8 +64,7 @@ jobs:
             attempt=$((attempt + 1))
             sleep 10
           done
-          echo "::error::The OrangeHRM demo did not answer for 5 minutes"
-          exit 1
+          echo "::warning::The OrangeHRM demo did not answer the quick check for 5 minutes. Running the tests anyway."
 
       - name: Run the tests
         uses: cypress-io/github-action@v6
