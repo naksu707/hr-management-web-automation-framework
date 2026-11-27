@@ -6,6 +6,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: e2e-${{ github.ref }}
   cancel-in-progress: true
@@ -69,6 +72,8 @@ jobs:
         with:
           name: mochawesome-${{ matrix.browser }}
           path: cypress/reports
+          # The .jsons folder has the totals shown on the report site
+          include-hidden-files: true
           if-no-files-found: ignore
 
       - name: Upload screenshots of failed tests
@@ -78,3 +83,35 @@ jobs:
           name: screenshots-${{ matrix.browser }}
           path: cypress/screenshots
           if-no-files-found: ignore
+
+  report:
+    name: Publish the reports
+    needs: cypress
+    # Runs even when a test failed, but only for main (not for pull requests)
+    if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the Mochawesome reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mochawesome-*
+          path: downloads
+
+      - name: Build the report site
+        run: bash .github/scripts/build-report-site.sh
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

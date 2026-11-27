@@ -10,10 +10,24 @@
 ![Mochawesome](docs/images/badge-mochawesome.svg)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
 
+[![E2E tests](https://github.com/naksu707/hr-management-web-automation-framework/actions/workflows/cypress.yml/badge.svg)](https://github.com/naksu707/hr-management-web-automation-framework/actions/workflows/cypress.yml)
+
+**[📊 Latest test reports](https://naksu707.github.io/hr-management-web-automation-framework/)** · **[🧪 Test cases](docs/test-cases.md)** · **[🐞 Defects](docs/defects.md)** · **[🧭 Test strategy](docs/test-strategy.md)** · **[🗓️ Test plan](docs/test-plan.md)**
+
 </div>
 
-> [!NOTE]
-> **Status: in progress 🚧** · Phases 1 to 3 are done: authentication, employee management (PIM), system users with access by role, leave requests across two roles, and network tests. The published report and the test strategy come next.
+---
+
+## 📈 In numbers
+
+|                         |                                                                                                                  |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **40** automated tests  | Authentication 11 · PIM 11 · Admin 10 · Leave 4 · Network 4                                                      |
+| **3** browsers          | Chrome, Firefox and Edge on every push: **120** test runs per CI run                                             |
+| **10** Page Objects     | Plus shared components for fields, dropdowns, dates, tables and toasts                                           |
+| **6** custom commands   | `cy.loginAs`, `cy.loginWith`, `cy.createEmployee`, `cy.deleteEmployee`, `cy.createUser`, `cy.createEssWithLeave` |
+| **2** roles in one flow | An ESS user applies for leave and the admin approves or rejects it                                               |
+| **2** defects found     | Documented with steps, evidence per browser and impact                                                           |
 
 ---
 
@@ -59,7 +73,14 @@ The project uses Cypress the way it works best:
 | **High**     | System users and roles, leave requests and approvals              |
 | **Medium**   | Search and filters, validation messages, error handling in the UI |
 
-Detailed test cases are in [`docs/test-cases.md`](docs/test-cases.md), and defects found are in [`docs/defects.md`](docs/defects.md).
+Detailed test cases are in [`docs/test-cases.md`](docs/test-cases.md).
+
+### 🐞 Defects found
+
+| ID                                                                                                      | Severity | Defect                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [BUG-001](docs/defects.md#bug-001--the-app-does-not-handle-requests-that-fail-or-are-cancelled)         | Low      | The app does not handle requests that fail or are cancelled (logout, leaving a page while it loads, ESS dashboard widgets) |
+| [BUG-002](docs/defects.md#bug-002--the-employees-name-in-the-header-does-not-change-after-it-is-edited) | Low      | The employee's name in the header does not change after it is edited, until the page is reloaded                           |
 
 ---
 
@@ -71,7 +92,7 @@ Detailed test cases are in [`docs/test-cases.md`](docs/test-cases.md), and defec
 | E2E framework | Cypress                                                             |
 | Runtime       | Node.js 22                                                          |
 | Test data     | Fixtures (JSON) and API setup with `cy.request`                     |
-| Reporting     | Mochawesome (HTML), screenshots and videos of failed tests          |
+| Reporting     | Mochawesome (HTML) per browser, published on GitHub Pages           |
 | Code quality  | ESLint, Prettier and the TypeScript compiler (`tsc --noEmit`)       |
 | CI/CD         | GitHub Actions, with a cross-browser matrix (Chrome, Firefox, Edge) |
 | IDE           | Visual Studio Code / WebStorm                                       |
@@ -103,7 +124,8 @@ hr-management-web-automation-framework
 │   │   ├── known-defects.ts Handling of known app defects (BUG-001)
 │   │   └── e2e.ts           Global hooks: reporter and clean-up after each test
 │   └── fixtures/            JSON test data (invalid logins, stubbed employee list)
-├── .github/workflows/       CI: lint, type check and the cross-browser matrix
+├── .github/               CI: lint, type check, cross-browser matrix and report publishing
+├── report/                Landing page of the published reports
 ├── docs/                    Test strategy, test plan, test cases and defects
 ├── cypress.config.ts        Base URL, retries, reporter, environments
 ├── tsconfig.json
@@ -205,8 +227,7 @@ GitHub Actions runs on every push to `main`, on every pull request, and on deman
 2. **Demo check:** each job waits up to 3 minutes for the public demo to answer before running the tests.
 3. **Cross-browser matrix:** the full suite in Chrome, Firefox and Edge, in parallel.
 4. **Artifacts:** the Mochawesome report for each browser, plus screenshots of failed tests.
-
-Planned: the HTML report published on GitHub Pages, so the latest results can be seen without downloading anything.
+5. **Published reports:** on `main`, the three reports are published on **[GitHub Pages](https://naksu707.github.io/hr-management-web-automation-framework/)**, with a landing page that shows the results of each browser.
 
 ---
 
@@ -220,10 +241,9 @@ Planned: the HTML report published on GitHub Pages, so the latest results can be
 - [x] Network behavior with `cy.intercept`
 - [x] UI vs. API consistency tests
 - [x] CI with GitHub Actions: lint, type check and cross-browser matrix
-- [ ] Report published on GitHub Pages
-- [x] Test cases
-- [x] Defect reports
-- [ ] Test strategy and test plan
+- [x] Reports published on GitHub Pages
+- [x] Test cases and defect reports
+- [x] Test strategy and test plan
 
 ---
 
@@ -231,6 +251,7 @@ Planned: the HTML report published on GitHub Pages, so the latest results can be
 
 - The OrangeHRM demo is public and shared: other people change its data at the same time, and it resets regularly. Tests create the data they need with unique names and never rely on data they did not create.
 - The admin credentials (`Admin` / `admin123`) are public demo data, shown on the demo's own login page.
+- Some runs can fail because the demo is down or slow, not because of a defect. The CI waits for the demo and retries failed tests twice; a run can be repeated with **Run workflow**.
 
 ---
 
